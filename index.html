@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Building Dossier — The Curated Advantage</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1410;
+    --cream: #f7f3ee;
+    --warm-white: #faf8f5;
+    --gold: #c4962a;
+    --gold-light: #e8c96a;
+    --muted: #8a7f74;
+    --border: #e0d8cf;
+    --tag-bg: #f0ebe4;
+    --green: #4a7c59;
+    --red: #a0432a;
+    --blue: #2a5a8a;
+    --card-bg: #ffffff;
+    --shadow: 0 2px 12px rgba(26,20,16,0.08);
+    --shadow-hover: 0 8px 32px rgba(26,20,16,0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 3px solid var(--gold);
+  }
+
+  .logo-block h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--cream);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .logo-block h1 span {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .logo-block p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  .logo-sub {
+    font-size: 0.78rem !important;
+    color: #c8bfb5 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-top: 5px !important;
+  }
+
+  .logo-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem !important;
+    color: var(--gold) !important;
+    font-style: italic;
+    text-transform: none !important;
+    letter-spacing: 0.04em !important;
+    margin-top: 3px !important;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 28px;
+    align-items: flex-end;
+  }
+
+  .stat-pill {
+    text-align: right;
+  }
+  .stat-pill .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+  .stat-pill .label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* CONTROLS */
+  .controls-bar {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(26,20,16,0.06);
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus {
+    border-color: var(--gold);
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  select, .filter-btn {
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  select:focus, .filter-btn:hover {
+    border-color: var(--gold);
+  }
+
+  .filter-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--gold);
+  }
+
+  .results-count {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  /* MAIN GRID */
+  main {
+    padding: 32px 40px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+    gap: 24px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow 0.25s, transform 0.25s;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    padding: 20px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .card-title-block {}
+
+  .building-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .building-address {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .building-address a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--border);
+    transition: color 0.2s;
+  }
+
+  .building-address a:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .card-badge {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card-badge.luxury { background: #f7f0e4; color: #8a6020; border-color: #e8d090; }
+  .card-badge.highrise { background: #e8f0f8; color: #2a5a8a; border-color: #b0ccec; }
+  .card-badge.boutique { background: #e8f4ec; color: #2a5a3a; border-color: #90c4a0; }
+
+  /* QUICK STATS ROW */
+  .quick-stats {
+    display: flex;
+    padding: 12px 22px;
+    gap: 0;
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qs-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 8px;
+    border-right: 1px solid var(--border);
+  }
+
+  .qs-item:last-child { border-right: none; }
+
+  .qs-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+    line-height: 1.1;
+  }
+
+  .qs-val.gold { color: var(--gold); }
+
+  .qs-key {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* CARD BODY */
+  .card-body {
+    padding: 16px 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* AMENITY TAGS */
+  .amenity-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .amenity-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px 3px 7px;
+    font-size: 0.75rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .amenity-tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .amenity-tag.no .dot { background: var(--muted); }
+
+  /* CONTACT SECTION */
+  .info-section {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .info-item {}
+
+  .info-key {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .info-val {
+    font-size: 0.85rem;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .info-val a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+
+  .info-val a:hover { color: var(--gold); }
+
+  .info-val.missing { color: var(--muted); font-style: italic; font-weight: 400; }
+
+  /* MOVE-IN FEES */
+  .fees-row {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .fee-item {}
+  .fee-item .fee-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+    display: block;
+  }
+  .fee-item .fee-val {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: block;
+    margin-top: 1px;
+  }
+  .fee-item .fee-val.missing { color: var(--muted); font-weight: 400; font-style: italic; }
+
+  /* NOTES */
+  .building-notes {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+    border-left: 2px solid var(--gold-light);
+    padding-left: 10px;
+  }
+
+  /* VERIFIED STAMP */
+  .verified-stamp {
+    margin-top: 10px;
+    font-size: 0.72rem;
+    color: #a8a09a;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .verified-stamp svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .verified-stamp span {
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  /* CARD FOOTER */
+  .card-footer {
+    padding: 12px 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--warm-white);
+  }
+
+  .neigh-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .edit-note-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .edit-note-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* NO RESULTS */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .no-results p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  /* ADD BUILDING PANEL */
+  .add-building-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .add-building-btn:hover {
+    background: var(--gold-light);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,20,16,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(26,20,16,0.3);
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+  }
+
+  .modal-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .modal-body {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-row.single { grid-template-columns: 1fr; }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--gold);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .form-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .check-item input { width: 14px; height: 14px; accent-color: var(--gold); }
+
+  .modal-footer {
+    padding: 16px 28px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel:hover { border-color: var(--muted); color: var(--ink); }
+
+  .btn-save {
+    padding: 10px 24px;
+    background: var(--ink);
+    color: var(--gold);
+    border: none;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .btn-save:hover { background: var(--gold); color: var(--ink); }
+
+  /* DOORMAN INDICATOR */
+  .doorman-yes { color: var(--green); }
+  .doorman-no { color: var(--red); }
+
+  @media (max-width: 768px) {
+    header { padding: 20px; }
+    .controls-bar { padding: 14px 20px; }
+    main { padding: 20px; }
+    .grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .header-stats { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <h1>The Building <span>Dossier</span></h1>
+    <p class="logo-sub">Verified Intelligence for Philadelphia Real Estate Professionals</p>
+    <p class="logo-brand">By The Curated Advantage</p>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill">
+      <span class="num" id="totalBuildings">0</span>
+      <span class="label">Buildings</span>
+    </div>
+    <div class="stat-pill">
+      <span class="num" id="totalUnits">0</span>
+      <span class="label">Total Units</span>
+    </div>
+    <div class="stat-pill">
+      <span class="num" id="doormanCount">0</span>
+      <span class="label">24/7 Doorman</span>
+    </div>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search by name, address, neighborhood…">
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Hood:</span>
+    <select id="hoodFilter">
+      <option value="">All</option>
+      <option>Rittenhouse Square</option>
+      <option>Avenue of the Arts</option>
+      <option>Avenue of the Arts South</option>
+      <option>Logan Square</option>
+      <option>Logan Square / Fairmount</option>
+      <option>Logan Square / Spring Garden</option>
+      <option>Washington Square West</option>
+      <option>Old City</option>
+      <option>Old City / Waterfront</option>
+      <option>Fairmount/Art Museum</option>
+      <option>Fairmount / Art Museum</option>
+      <option>Northern Liberties</option>
+      <option>Northern Liberties / Fairmount</option>
+      <option>Society Hill</option>
+      <option>Center City West</option>
+      <option>Center City / Rittenhouse</option>
+      <option>Center City / Midtown Village</option>
+      <option>Spring Garden</option>
+      <option>Spring Garden / Fairmount</option>
+      <option>Graduate Hospital</option>
+      <option>Point Breeze / Graduate Hospital</option>
+      <option>University City</option>
+      <option>Midtown Village</option>
+      <option>Chinatown / Washington Sq West</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn" data-filter="doorman" id="doormanBtn">24/7 Doorman</button>
+    <button class="filter-btn" data-filter="pool" id="poolBtn">Pool</button>
+    <button class="filter-btn" data-filter="parking" id="parkingBtn">Parking</button>
+  </div>
+
+  <button class="add-building-btn" onclick="openAddModal()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    Add Building
+  </button>
+
+  <span class="results-count" id="resultsCount"></span>
+</div>
+
+<main>
+  <div class="grid" id="buildingGrid"></div>
+</main>
+
+<!-- ADD BUILDING MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add New Building</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">Basic Info</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Building Name *</label>
+          <input type="text" id="f_name" placeholder="The Moravian">
+        </div>
+        <div class="form-group">
+          <label>Neighborhood</label>
+          <select id="f_neighborhood">
+            <option value="">Select…</option>
+            <option>Rittenhouse Square</option>
+            <option>Avenue of the Arts</option>
+            <option>Logan Square</option>
+            <option>Washington Square West</option>
+            <option>Old City</option>
+            <option>Fairmount/Art Museum</option>
+            <option>Northern Liberties</option>
+            <option>Society Hill</option>
+            <option>Center City West</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label>Full Address *</label>
+          <input type="text" id="f_address" placeholder="1234 Walnut St, Philadelphia, PA 19103">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Total Units</label>
+          <input type="number" id="f_units" placeholder="e.g. 209">
+        </div>
+        <div class="form-group">
+          <label>Number of Floors</label>
+          <input type="number" id="f_floors" placeholder="e.g. 31">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year Built</label>
+          <input type="number" id="f_year" placeholder="e.g. 2007">
+        </div>
+        <div class="form-group">
+          <label>Building Type</label>
+          <select id="f_type">
+            <option value="">Select…</option>
+            <option value="luxury">Luxury High-Rise</option>
+            <option value="highrise">High-Rise</option>
+            <option value="boutique">Boutique/Mid-Rise</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title">Management & HOA</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Management Company</label>
+          <input type="text" id="f_mgmt" placeholder="e.g. Allan Domb Real Estate">
+        </div>
+        <div class="form-group">
+          <label>HOA / Condo Assoc. Name</label>
+          <input type="text" id="f_hoa_name" placeholder="e.g. Symphony House Condo Assoc.">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact Name</label>
+          <input type="text" id="f_contact" placeholder="e.g. Jane Smith">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="f_phone" placeholder="(215) 555-0100">
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="f_email" placeholder="management@building.com">
+        </div>
+      </div>
+
+      <div class="form-section-title">Move-In / Move-Out Fees</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Move-In Fee</label>
+          <input type="text" id="f_movein" placeholder="e.g. $500">
+        </div>
+        <div class="form-group">
+          <label>Move-Out Fee</label>
+          <input type="text" id="f_moveout" placeholder="e.g. $500">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Move-In Window / Rules</label>
+          <input type="text" id="f_window" placeholder="e.g. M-F 9am-5pm, must schedule 48hrs">
+        </div>
+        <div class="form-group">
+          <label>Elevator Deposit / Reserve</label>
+          <input type="text" id="f_elevator" placeholder="e.g. $300 refundable">
+        </div>
+      </div>
+
+      <div class="form-section-title">Amenities</div>
+      <div class="checkbox-grid">
+        <label class="check-item"><input type="checkbox" id="a_doorman"> 24/7 Doorman</label>
+        <label class="check-item"><input type="checkbox" id="a_concierge"> Concierge</label>
+        <label class="check-item"><input type="checkbox" id="a_gym"> Gym/Fitness</label>
+        <label class="check-item"><input type="checkbox" id="a_pool"> Pool</label>
+        <label class="check-item"><input type="checkbox" id="a_pool_indoor"> Indoor Pool</label>
+        <label class="check-item"><input type="checkbox" id="a_parking"> Parking Garage</label>
+        <label class="check-item"><input type="checkbox" id="a_valet"> Valet Parking</label>
+        <label class="check-item"><input type="checkbox" id="a_rooftop"> Rooftop</label>
+        <label class="check-item"><input type="checkbox" id="a_pets"> Pet Friendly</label>
+        <label class="check-item"><input type="checkbox" id="a_package"> Package Room</label>
+        <label class="check-item"><input type="checkbox" id="a_laundry"> In-Unit Laundry</label>
+        <label class="check-item"><input type="checkbox" id="a_storage"> Storage</label>
+        <label class="check-item"><input type="checkbox" id="a_bike"> Bike Storage</label>
+        <label class="check-item"><input type="checkbox" id="a_shuttle"> Shuttle Service</label>
+        <label class="check-item"><input type="checkbox" id="a_balcony"> Balconies</label>
+      </div>
+
+      <div class="form-section-title">Notes</div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label>Notes / TC Notes</label>
+          <textarea id="f_notes" placeholder="Anything you want to remember about this building…"></textarea>
+        </div>
+      </div>
+
+      <div class="form-section-title">Verification</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Verified By (First Initial + Last Name)</label>
+          <input type="text" id="f_verified_by" placeholder="e.g. S. Johnson">
+        </div>
+        <div class="form-group">
+          <label>Date Verified (MM/DD/YYYY)</label>
+          <input type="text" id="f_verified_date" placeholder="e.g. 02/26/2026">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveBuilding()">Save Building</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const SEED_BUILDINGS = [
+  {
+    id: 1, name: "10 Rittenhouse Square", address: "130 South 18th Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "luxury",
+    units: 142, floors: 33, yearBuilt: 2011,
+    mgmt: "Allan Domb Real Estate", hoaName: "10 Rittenhouse Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduled, elevator use required", elevatorDeposit: "Refundable deposit req.",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: false, storage: true, bike: true, shuttle: false, balcony: false },
+    notes: "Designed by Robert A.M. Stern. Salt-water pool, music salon, marble lobby. Private Rittenhouse Square entrance. Highest price-per-sqft in city."
+  },
+  {
+    id: 2, name: "The Symphony House", address: "440 South Broad Street, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Avenue of the Arts", type: "luxury",
+    units: 209, floors: 31, yearBuilt: 2007,
+    mgmt: "Dranoff Properties", hoaName: "Symphony House Condo Assoc.", contact: "", phone: "(215) 735-7368", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Max 9 units/floor — elevator scheduling req.", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: true, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "65-ft indoor lap pool. Nation's Best High-Rise Condo (2008). Adjacent 400-seat theater. Units 848–5,100 sq ft."
+  },
+  {
+    id: 3, name: "The Philadelphian", address: "2401 Pennsylvania Avenue, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Fairmount / Art Museum", type: "highrise",
+    units: 790, floors: 20, yearBuilt: 1963,
+    mgmt: "Philadelphian Management (On-Site)", hoaName: "The Philadelphian Owners Assoc.", contact: "M. Levinson / C. Lyons", phone: "(215) 232-7400", email: "MLevinson@2401.com",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "M–Sat, must schedule with front desk", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: true, parking: true, valet: true, rooftop: false, pets: false, package: false, laundry: false, storage: false, bike: false, shuttle: true, balcony: true },
+    notes: "Largest single building in Philly — 790 units. On-site grocery (Klein's), restaurant (Little Pete's), pharmacy, bank, hair salon. Condo fee includes ALL utilities + cable/WiFi. Free shuttle to Center City M–Sat."
+  },
+  {
+    id: 4, name: "The Murano", address: "2101 Market Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Center City West", type: "luxury",
+    units: 251, floors: 42, yearBuilt: 2008,
+    mgmt: "Murano Condo Assoc.", hoaName: "Murano Condominium Assoc.", contact: "", phone: "(215) 564-1234", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Elevator scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: false, storage: true, bike: true, shuttle: false, balcony: true },
+    notes: "42-story curved glass tower. Studios to penthouses. One of tallest residential buildings in Philly. Floor-to-ceiling windows throughout."
+  },
+  {
+    id: 5, name: "Parc Rittenhouse", address: "225 South 18th Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "luxury",
+    units: 281, floors: 19, yearBuilt: 1920,
+    mgmt: "Parc Rittenhouse Management", hoaName: "Parc Rittenhouse Condo Assoc.", contact: "", phone: "(215) 875-3700", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday preferred, elevator scheduling req.", elevatorDeposit: "Deposit required",
+    amenities: { doorman: true, concierge: true, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "East side of Rittenhouse Square. Built 1920, converted 2007. Units 400–6,560 sq ft. Historic building with modern updates."
+  },
+  {
+    id: 6, name: "Academy House", address: "1420 Locust Street, Philadelphia, PA 19102",
+    zip: "19102", neighborhood: "Avenue of the Arts", type: "highrise",
+    units: 556, floors: 37, yearBuilt: 1978,
+    mgmt: "Allan Domb Real Estate", hoaName: "Academy House Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: false, pets: false, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "37-floor tower at 15th & Locust. 556 units — one of largest in Center City. Units 521–2,399 sq ft. Strong rental market."
+  },
+  {
+    id: 7, name: "1706 Rittenhouse Square", address: "1706 Rittenhouse Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "luxury",
+    units: 31, floors: 29, yearBuilt: 2010,
+    mgmt: "Allan Domb Real Estate", hoaName: "1706 Rittenhouse Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Full-floor units — coordinated scheduling", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: false, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "31 full-floor custom condos. Automated indoor parking. Direct elevator to each unit. River-to-river views. Ultra-exclusive."
+  },
+  {
+    id: 8, name: "The Rittenhouse Hotel & Residences", address: "210 West Rittenhouse Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "luxury",
+    units: 99, floors: 25, yearBuilt: 1925,
+    mgmt: "The Rittenhouse Hotel", hoaName: "Rittenhouse Condo Assoc.", contact: "", phone: "(215) 546-9000", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Hotel-managed scheduling", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: true, parking: true, valet: true, rooftop: false, pets: true, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Attached to 5-star Rittenhouse Hotel. White-glove concierge. Access to hotel spa, pool, dining. Units 415–3,384 sq ft."
+  },
+  {
+    id: 9, name: "William Penn House", address: "1919 Chestnut Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "highrise",
+    units: 600, floors: 28, yearBuilt: 1965,
+    mgmt: "William Penn House Management", hoaName: "William Penn House Condo Assoc.", contact: "", phone: "(215) 563-7580", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "600 units / 28 floors. Studios to 5-BR. Steps from Rittenhouse Square. Verify rental restrictions before listing."
+  },
+  {
+    id: 10, name: "The Dorchester", address: "226 West Rittenhouse Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "highrise",
+    units: 165, floors: 23, yearBuilt: 1980,
+    mgmt: "Rittenhouse Square Management", hoaName: "Dorchester Condo Assoc.", contact: "", phone: "(215) 546-0700", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Elevator scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Directly on Rittenhouse Square. 10th–33rd floors. Classic park views. Units 1,239–3,716 sq ft."
+  },
+  {
+    id: 11, name: "The Savoy at Rittenhouse", address: "1810 Rittenhouse Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "highrise",
+    units: 230, floors: 20, yearBuilt: 1952,
+    mgmt: "Rittenhouse Square Management", hoaName: "Savoy Condo Assoc.", contact: "", phone: "(215) 546-1810", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: false, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "South side of Rittenhouse Square. Mid-century, 230 units. Classic Square views. 1-BR units most popular."
+  },
+  {
+    id: 12, name: "Society Hill Towers", address: "200-220 Locust Street, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Society Hill", type: "highrise",
+    units: 624, floors: 31, yearBuilt: 1964,
+    mgmt: "Society Hill Towers Management", hoaName: "Society Hill Towers Assoc.", contact: "", phone: "(215) 925-6600", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Schedule with front desk", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: true },
+    notes: "Three I.M. Pei-designed towers. 624 units total. Views of Delaware River. Outdoor pool + tennis courts."
+  },
+  {
+    id: 13, name: "The Barclay", address: "237 South 18th Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "luxury",
+    units: 165, floors: 18, yearBuilt: 1929,
+    mgmt: "Allan Domb Real Estate", hoaName: "The Barclay Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Historic 1929 building (originally a hotel). Directly on Rittenhouse Square. Prewar architecture with modern updates."
+  },
+  {
+    id: 14, name: "Hopkinson House", address: "604 New Street, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Society Hill", type: "highrise",
+    units: 270, floors: 30, yearBuilt: 1963,
+    mgmt: "Allan Domb Real Estate", hoaName: "Hopkinson House Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Elevator scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "Society Hill high-rise. Outdoor pool. Views of Delaware River. Good value in prime location."
+  },
+  {
+    id: 15, name: "Wanamaker House", address: "2 Logan Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Logan Square", type: "highrise",
+    units: 542, floors: 32, yearBuilt: 1970,
+    mgmt: "Wanamaker House Management", hoaName: "Wanamaker House Condo Assoc.", contact: "", phone: "(215) 569-3200", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: true, laundry: true, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "Logan Square / Parkway. 542 units / 32 floors. Excellent parkway and skyline views."
+  },
+  {
+    id: 16, name: "The Lanesborough", address: "1700 Rittenhouse Square, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "boutique",
+    units: 82, floors: 7, yearBuilt: 2005,
+    mgmt: "Lanesborough Management", hoaName: "Lanesborough Condo Assoc.", contact: "", phone: "(215) 545-0800", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "Deposit required",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Converted from garage in 2005. 82 units. Rittenhouse address without full high-rise feel. Units 784–4,995 sq ft."
+  },
+  {
+    id: 17, name: "St. James Apartments", address: "200 West Washington Square, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Washington Square West", type: "luxury",
+    units: 438, floors: 45, yearBuilt: 2000,
+    mgmt: "Greystar / St. James Mgmt", hoaName: "St. James Apartments", contact: "", phone: "(215) 413-9000", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling with leasing office", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: true, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "45-story luxury rental on historic Washington Square. Studios–3 BR. Hotel-style amenities. On-site retail. Near Jefferson University + Pennsylvania Hospital."
+  },
+  {
+    id: 18, name: "1900 Arch (PMC)", address: "1912-20 Arch Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Logan Square", type: "highrise",
+    units: 300, floors: 14, yearBuilt: 2014,
+    mgmt: "PMC Property Group", hoaName: "PMC / 1900 Arch Management", contact: "", phone: "(215) 955-4346", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Coordinated with leasing office", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: true, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "14-story PMC luxury rental. Rooftop sky deck, fire pits, courtyard. 1–3 BR. Valet parking available."
+  },
+  {
+    id: 19, name: "The Marine Club", address: "1100 South Broad Street, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Avenue of the Arts South", type: "boutique",
+    units: 300, floors: 6, yearBuilt: 1900,
+    mgmt: "Marine Club Condo Assoc.", hoaName: "Marine Club Condominium Assoc.", contact: "", phone: "(215) 271-2500", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Gated building — schedule w/ front desk", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: true, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: true, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Former Marine Corps Quartermaster's Depot — historic conversion. 9,000 sq ft fitness center w/ sauna, steam, jacuzzi. Koi pond courtyard. Unique loft-style units."
+  },
+  {
+    id: 20, name: "Graduate Pointe", address: "2501 Washington Avenue, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Graduate Hospital", type: "highrise",
+    units: 200, floors: 6, yearBuilt: 2016,
+    mgmt: "JMB Realty / Graduate Pointe", hoaName: "Graduate Pointe Management", contact: "", phone: "(215) 467-8900", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "Newer construction in hot Graduate Hospital neighborhood. Close to CHOP, Penn Medicine. Popular with medical professionals."
+  },
+  {
+    id: 21, name: "Museum Towers", address: "1801 Buttonwood Street, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Logan Square / Fairmount", type: "highrise",
+    units: 450, floors: 28, yearBuilt: 1970,
+    mgmt: "Museum Towers Management", hoaName: "Museum Towers Condo Assoc.", contact: "", phone: "(215) 563-8660", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday scheduling req.", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "28-floor tower steps from the Parkway. 450 units. Indoor and outdoor pools. Adjacent to Art Museum district."
+  },
+  {
+    id: 22, name: "The Granary", address: "1901 Callowhill Street, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Fairmount", type: "boutique",
+    units: 120, floors: 7, yearBuilt: 2004,
+    mgmt: "PMC Property Group", hoaName: "The Granary Management", contact: "", phone: "(215) 232-1800", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Converted grain warehouse. Exposed brick, loft-style units. Steps from Eastern State Penitentiary and Fairmount Ave dining."
+  },
+  {
+    id: 23, name: "Tower Place", address: "1400 Spring Garden Street, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Spring Garden", type: "highrise",
+    units: 300, floors: 22, yearBuilt: 1990,
+    mgmt: "Tower Place Management", hoaName: "Tower Place Assoc.", contact: "", phone: "(215) 787-0800", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "22-floor tower in Spring Garden. Strong rental market near Art Museum area. Quick I-76 access."
+  },
+  {
+    id: 24, name: "Lofts at Logan View", address: "1666 Callowhill Street, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Logan Square / Spring Garden", type: "boutique",
+    units: 110, floors: 8, yearBuilt: 2006,
+    mgmt: "Lofts at Logan View Mgmt", hoaName: "1666 Callowhill Assoc.", contact: "", phone: "(215) 232-1900", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Loft-style units near Parkway. Popular with young professionals. Walkable to Logan Square + Fairmount."
+  },
+  {
+    id: 25, name: "The Broadridge Philly", address: "1300 Fairmount Avenue, Philadelphia, PA 19123",
+    zip: "19123", neighborhood: "Northern Liberties / Fairmount", type: "highrise",
+    units: 180, floors: 8, yearBuilt: 2018,
+    mgmt: "Broadridge Management", hoaName: "1300 Fairmount Assoc.", contact: "", phone: "(215) 765-0300", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Newer construction at edge of Northern Liberties. Rooftop deck. Near Girard Ave dining corridor."
+  },
+  {
+    id: 26, name: "North Broad Living", address: "631 North Broad Street, Philadelphia, PA 19123",
+    zip: "19123", neighborhood: "Northern Liberties", type: "highrise",
+    units: 150, floors: 7, yearBuilt: 2015,
+    mgmt: "North Broad Living Mgmt", hoaName: "631 N Broad Assoc.", contact: "", phone: "(215) 765-1100", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "Northern Liberties location. Close to Broad St Line. Popular with Temple and Drexel commuters."
+  },
+  {
+    id: 27, name: "One Water Street Apartments", address: "250 N Christopher Columbus Blvd, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City / Waterfront", type: "highrise",
+    units: 180, floors: 8, yearBuilt: 2007,
+    mgmt: "One Water Street Mgmt", hoaName: "One Water Street Assoc.", contact: "", phone: "(215) 627-2200", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Coordinated with leasing", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Waterfront location on Columbus Blvd. Delaware River views. Close to Penn's Landing. Newer construction."
+  },
+  {
+    id: 28, name: "The Chocolate Works", address: "231 North Third Street, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City", type: "boutique",
+    units: 140, floors: 6, yearBuilt: 2000,
+    mgmt: "Chocolate Works Condo Assoc.", hoaName: "Chocolate Works Assoc.", contact: "", phone: "(215) 829-0100", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: true },
+    notes: "Historic chocolate factory conversion in Old City. Loft-style units, exposed brick, high ceilings. Courtyard and pool."
+  },
+  {
+    id: 29, name: "MetroClub", address: "139 South 15th Street, Philadelphia, PA 19102",
+    zip: "19102", neighborhood: "Center City / Midtown Village", type: "highrise",
+    units: 139, floors: 8, yearBuilt: 2003,
+    mgmt: "MetroClub Management", hoaName: "MetroClub Condo Assoc.", contact: "", phone: "(215) 545-3900", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "139 units. Modern amenities, urban loft feel. Popular with young professionals near Midtown Village."
+  },
+  {
+    id: 30, name: "The Franklin Residences", address: "834 Chestnut Street, Philadelphia, PA 19107",
+    zip: "19107", neighborhood: "Washington Square West", type: "boutique",
+    units: 100, floors: 9, yearBuilt: 2005,
+    mgmt: "Franklin Residences Mgmt", hoaName: "Franklin Residences Assoc.", contact: "", phone: "(215) 829-9300", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Historic building in Washington Sq West. Steps from Washington Square Park. Boutique feel. Strong condo resale."
+  },
+  {
+    id: 31, name: "1101 Ludlow Apartments", address: "1101 Ludlow Street, Philadelphia, PA 19107",
+    zip: "19107", neighborhood: "Washington Square West", type: "boutique",
+    units: 80, floors: 8, yearBuilt: 2008,
+    mgmt: "1101 Ludlow Mgmt", hoaName: "1101 Ludlow Assoc.", contact: "", phone: "(215) 627-1101", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Modern boutique building in Washington Sq West. Ground floor retail. Steps from Jefferson Hospital."
+  },
+  {
+    id: 32, name: "The Lincoln Building", address: "1222 Locust Street, Philadelphia, PA 19107",
+    zip: "19107", neighborhood: "Avenue of the Arts / Wash. Sq West", type: "boutique",
+    units: 90, floors: 10, yearBuilt: 1920,
+    mgmt: "Lincoln Building Mgmt", hoaName: "Lincoln Building Condo Assoc.", contact: "", phone: "(215) 545-7700", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: false, pets: true, package: false, laundry: false, storage: false, bike: false, shuttle: false, balcony: false },
+    notes: "Historic 1920 building. Ornate prewar architecture. Locust Street — prime Ave of the Arts location."
+  },
+  {
+    id: 33, name: "Independence Place I & II", address: "1010 Arch Street, Philadelphia, PA 19107",
+    zip: "19107", neighborhood: "Chinatown / Washington Sq West", type: "highrise",
+    units: 320, floors: 25, yearBuilt: 1985,
+    mgmt: "Allan Domb Real Estate", hoaName: "Independence Place Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: false, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "Twin towers in Chinatown-adjacent area. 320 units, pool, good value for Center City. Walking distance to galleries and dining."
+  },
+  {
+    id: 34, name: "Pier 3 Condominiums", address: "3 Penn's Landing Square, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City / Waterfront", type: "boutique",
+    units: 80, floors: 5, yearBuilt: 1998,
+    mgmt: "Allan Domb Real Estate", hoaName: "Pier 3 Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: false, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Delaware River waterfront location. Unique pier-style condos. Great views. Near Penn's Landing attractions."
+  },
+  {
+    id: 35, name: "Pier 5 Condominiums", address: "5 Penn's Landing Square, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City / Waterfront", type: "boutique",
+    units: 70, floors: 5, yearBuilt: 1998,
+    mgmt: "Allan Domb Real Estate", hoaName: "Pier 5 Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: false, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Adjacent to Pier 3. Delaware River views. Unique waterfront living in Old City. Popular with buyers seeking views."
+  },
+  {
+    id: 36, name: "The Left Bank", address: "3131 Walnut Street, Philadelphia, PA 19104",
+    zip: "19104", neighborhood: "University City", type: "highrise",
+    units: 274, floors: 18, yearBuilt: 2000,
+    mgmt: "Post Apartment Homes", hoaName: "Left Bank Management", contact: "", phone: "(215) 387-5500", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "University City's premier luxury rental. 18 floors, 274 units. Pool, rooftop, great Penn/Drexel proximity. Strong grad student + faculty market."
+  },
+  {
+    id: 37, name: "Arrive University City", address: "3601 Market Street, Philadelphia, PA 19104",
+    zip: "19104", neighborhood: "University City", type: "highrise",
+    units: 200, floors: 12, yearBuilt: 2016,
+    mgmt: "Arrive University City Mgmt", hoaName: "3601 Market Assoc.", contact: "", phone: "(215) 222-3601", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "Modern construction near Drexel and Penn. Steps from 30th Street Station. Popular with young professionals and students."
+  },
+  {
+    id: 38, name: "Walnut Apartments", address: "4400-4418 Walnut Street, Philadelphia, PA 19104",
+    zip: "19104", neighborhood: "University City", type: "highrise",
+    units: 120, floors: 7, yearBuilt: 1995,
+    mgmt: "Walnut Apts Management", hoaName: "Walnut Apts Assoc.", contact: "", phone: "(215) 222-4400", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: false, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "University City location. Close to Penn Medicine campus. Strong rental demand year-round."
+  },
+  {
+    id: 39, name: "Baum's by Collins", address: "106 South 11th Street, Philadelphia, PA 19107",
+    zip: "19107", neighborhood: "Midtown Village", type: "boutique",
+    units: 85, floors: 7, yearBuilt: 2010,
+    mgmt: "Collins Management", hoaName: "Baum's by Collins Assoc.", contact: "", phone: "(215) 627-1106", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Heart of Midtown Village. Steps from Gayborhood, dining, nightlife. Boutique building with strong community feel."
+  },
+  {
+    id: 40, name: "The Bank Building", address: "810 South Broad Street, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Avenue of the Arts South", type: "boutique",
+    units: 75, floors: 9, yearBuilt: 2005,
+    mgmt: "Allan Domb Real Estate", hoaName: "Bank Building Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: false, laundry: true, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "Converted historic bank building. South Broad St location. Popular condo building near Passyunk dining scene."
+  },
+  {
+    id: 41, name: "Universal Properties Apts", address: "1601 Federal Street, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Point Breeze / Graduate Hospital", type: "highrise",
+    units: 140, floors: 6, yearBuilt: 2012,
+    mgmt: "Universal Properties", hoaName: "1601 Federal Assoc.", contact: "", phone: "(215) 468-1800", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "Point Breeze/Graduate Hospital border. Newer construction. Growing neighborhood with strong appreciation. Near Broad St Line."
+  },
+  {
+    id: 42, name: "Naval Square Condominiums", address: "600 Rhoads Avenue, Philadelphia, PA 19146",
+    zip: "19146", neighborhood: "Graduate Hospital", type: "boutique",
+    units: 380, floors: 5, yearBuilt: 2006,
+    mgmt: "AIMCO / Naval Square Mgmt", hoaName: "Naval Square Condo Assoc.", contact: "", phone: "(215) 546-8900", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Coordinated with management", elevatorDeposit: "Deposit required",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: true, bike: true, shuttle: false, balcony: true },
+    notes: "Former Philadelphia Naval Asylum campus — 26 historic buildings on 20 acres. Pool, rooftop, gated community. Unique historic conversion in Graduate Hospital."
+  },
+  {
+    id: 43, name: "The Lippincott", address: "309 Market Street, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City", type: "boutique",
+    units: 45, floors: 8, yearBuilt: 2002,
+    mgmt: "Allan Domb Real Estate", hoaName: "Lippincott Condo Assoc.", contact: "", phone: "(215) 893-9920", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: false, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: false, pets: true, package: false, laundry: true, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "Old City boutique conversion. Small, intimate building. Historic character. Walking distance to galleries, restaurants, and Independence Hall."
+  },
+  {
+    id: 44, name: "2100 Hamilton Street", address: "2100 Hamilton Street, Philadelphia, PA 19130",
+    zip: "19130", neighborhood: "Spring Garden / Fairmount", type: "highrise",
+    units: 320, floors: 24, yearBuilt: 1968,
+    mgmt: "Hamilton House Management", hoaName: "2100 Hamilton Condo Assoc.", contact: "", phone: "(215) 236-2100", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday scheduling req.", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: true, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: true },
+    notes: "24-floor tower in Spring Garden. Pool, gym. Close to Fairmount Ave dining and Ben Franklin Pkwy. Strong value vs Rittenhouse."
+  },
+  {
+    id: 45, name: "1601 Vine Apartments", address: "1601 Vine Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Logan Square", type: "highrise",
+    units: 270, floors: 18, yearBuilt: 2008,
+    mgmt: "Sentinel Real Estate / 1601 Vine", hoaName: "1601 Vine Assoc.", contact: "", phone: "(215) 563-1601", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Logan Square location. Steps from Whole Foods, Parkway museums. 18-floor modern tower. Strong rental demand."
+  },
+  {
+    id: 46, name: "The Chatham", address: "20th and Walnut Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Rittenhouse Square", type: "highrise",
+    units: 300, floors: 22, yearBuilt: 1965,
+    mgmt: "Chatham Management", hoaName: "The Chatham Condo Assoc.", contact: "", phone: "(215) 567-2000", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday scheduling req.", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: false, laundry: true, storage: true, bike: false, shuttle: false, balcony: false },
+    notes: "Rittenhouse-adjacent high-rise. 300 units. One of the original Center City high-rises. Strong value."
+  },
+  {
+    id: 47, name: "The Sansom", address: "1605 Sansom Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Center City / Rittenhouse", type: "highrise",
+    units: 150, floors: 10, yearBuilt: 2015,
+    mgmt: "The Sansom Management", hoaName: "1605 Sansom Assoc.", contact: "", phone: "(215) 567-1605", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: true },
+    notes: "Modern mid-rise steps from Rittenhouse. Great retail corridor. Popular with young professionals. Strong rental demand."
+  },
+  {
+    id: 48, name: "2101 Chestnut Condominiums", address: "2101 Chestnut Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Center City West", type: "highrise",
+    units: 250, floors: 20, yearBuilt: 1988,
+    mgmt: "2101 Chestnut Management", hoaName: "2101 Chestnut Condo Assoc.", contact: "", phone: "(215) 567-2101", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Scheduling required", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: true, laundry: false, storage: false, bike: false, shuttle: false, balcony: true },
+    notes: "Rittenhouse-adjacent on Chestnut St. 20 floors, 250 units. Good value for the location. Steps from Logan Square."
+  },
+  {
+    id: 49, name: "The Shirt Corner Apartments", address: "224 Church Street, Philadelphia, PA 19106",
+    zip: "19106", neighborhood: "Old City", type: "boutique",
+    units: 60, floors: 5, yearBuilt: 2008,
+    mgmt: "Shirt Corner Mgmt", hoaName: "224 Church St Assoc.", contact: "", phone: "(215) 627-0224", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "", elevatorDeposit: "",
+    amenities: { doorman: false, concierge: false, gym: true, pool: false, pool_indoor: false, parking: false, valet: false, rooftop: true, pets: true, package: true, laundry: true, storage: false, bike: true, shuttle: false, balcony: false },
+    notes: "Boutique building in the heart of Old City arts district. Walk to galleries, restaurants, and nightlife. Strong short-term rental history."
+  },
+  {
+    id: 50, name: "2400 Chestnut Apartments", address: "2400 Chestnut Street, Philadelphia, PA 19103",
+    zip: "19103", neighborhood: "Center City West", type: "highrise",
+    units: 310, floors: 21, yearBuilt: 1972,
+    mgmt: "2400 Chestnut Management", hoaName: "2400 Chestnut Condo Assoc.", contact: "", phone: "(215) 567-2400", email: "",
+    moveInFee: "Call to confirm", moveOutFee: "Call to confirm", moveWindow: "Weekday scheduling req.", elevatorDeposit: "",
+    amenities: { doorman: true, concierge: false, gym: true, pool: false, pool_indoor: false, parking: true, valet: false, rooftop: false, pets: false, package: true, laundry: true, storage: true, bike: false, shuttle: false, balcony: true },
+    notes: "21-floor tower at 24th & Chestnut. 310 units. Strong value play in Center City West. Close to 30th Street Station and Schuylkill Trail."
+  }
+];
+
+// ===== STATE =====
+let buildings = [];
+let activeFilters = new Set();
+let editingId = null;
+
+// ===== INIT =====
+const DATA_VERSION = '2.0'; // bump this to force a reload of seed data
+
+function init() {
+  const stored = localStorage.getItem('phillyBuildingIntel');
+  const storedVersion = localStorage.getItem('phillyBuildingIntel_version');
+  const storedData = stored ? JSON.parse(stored) : null;
+
+  // If no data, version mismatch, or stored has fewer buildings than seed — reload from seed
+  if (!storedData || storedVersion !== DATA_VERSION || storedData.length < SEED_BUILDINGS.length) {
+    // Merge: keep any user-added buildings (id > SEED count) and user edits to existing ones
+    const userAdded = storedData ? storedData.filter(b => b.id > SEED_BUILDINGS.length) : [];
+    buildings = JSON.parse(JSON.stringify(SEED_BUILDINGS)).concat(userAdded);
+    save();
+  } else {
+    buildings = storedData;
+  }
+
+  updateStats();
+  render();
+
+  document.getElementById('searchInput').addEventListener('input', render);
+  document.getElementById('hoodFilter').addEventListener('change', render);
+}
+
+function save() {
+  localStorage.setItem('phillyBuildingIntel', JSON.stringify(buildings));
+  localStorage.setItem('phillyBuildingIntel_version', DATA_VERSION);
+}
+
+// ===== STATS =====
+function updateStats() {
+  document.getElementById('totalBuildings').textContent = buildings.length;
+  const totalUnits = buildings.reduce((s, b) => s + (b.units || 0), 0);
+  document.getElementById('totalUnits').textContent = totalUnits.toLocaleString();
+  const doorman = buildings.filter(b => b.amenities.doorman).length;
+  document.getElementById('doormanCount').textContent = doorman;
+}
+
+// ===== RENDER =====
+function render() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const hood = document.getElementById('hoodFilter').value;
+
+  const filtered = buildings.filter(b => {
+    const textMatch = !query || [b.name, b.address, b.neighborhood, b.mgmt, b.hoaName, b.notes]
+      .join(' ').toLowerCase().includes(query);
+    const hoodMatch = !hood || b.neighborhood === hood;
+    const filterMatch = [...activeFilters].every(f => {
+      if (f === 'doorman') return b.amenities.doorman;
+      if (f === 'pool') return b.amenities.pool || b.amenities.pool_indoor;
+      if (f === 'parking') return b.amenities.parking || b.amenities.valet;
+      return true;
+    });
+    return textMatch && hoodMatch && filterMatch;
+  });
+
+  document.getElementById('resultsCount').textContent =
+    filtered.length === buildings.length
+      ? `${buildings.length} buildings`
+      : `${filtered.length} of ${buildings.length} buildings`;
+
+  const grid = document.getElementById('buildingGrid');
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="no-results"><p>No buildings found.</p><span>Try adjusting your search or filters.</span></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(b => buildCard(b)).join('');
+}
+
+function amenityTag(label, active) {
+  return `<span class="amenity-tag${active ? '' : ' no'}"><span class="dot"></span>${label}</span>`;
+}
+
+function buildCard(b) {
+  const a = b.amenities;
+
+  const mainAmenities = [
+    { key: 'doorman', label: '24/7 Doorman' },
+    { key: 'concierge', label: 'Concierge' },
+    { key: 'pool', label: 'Pool' },
+    { key: 'pool_indoor', label: 'Indoor Pool' },
+    { key: 'parking', label: 'Parking' },
+    { key: 'valet', label: 'Valet' },
+    { key: 'gym', label: 'Gym' },
+    { key: 'rooftop', label: 'Rooftop' },
+    { key: 'pets', label: 'Pet Friendly' },
+    { key: 'shuttle', label: 'Shuttle' },
+    { key: 'balcony', label: 'Balconies' },
+    { key: 'storage', label: 'Storage' },
+  ].filter(x => a[x.key]);
+
+  const badgeClass = b.type || 'highrise';
+  const badgeLabel = b.type === 'luxury' ? 'Luxury' : b.type === 'boutique' ? 'Boutique' : 'High-Rise';
+
+  const mapUrl = `https://maps.google.com/?q=${encodeURIComponent(b.address)}`;
+
+  return `
+  <div class="card" id="card-${b.id}">
+    <div class="card-header">
+      <div class="card-title-block">
+        <div class="building-name">${b.name}</div>
+        <div class="building-address">
+          <a href="${mapUrl}" target="_blank" rel="noopener">${b.address}</a>
+        </div>
+      </div>
+      <span class="card-badge ${badgeClass}">${badgeLabel}</span>
+    </div>
+
+    <div class="quick-stats">
+      <div class="qs-item">
+        <span class="qs-val">${b.units ? b.units.toLocaleString() : '—'}</span>
+        <span class="qs-key">Units</span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-val">${b.floors ? b.floors : '—'}</span>
+        <span class="qs-key">Floors</span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-val">${b.yearBuilt || '—'}</span>
+        <span class="qs-key">Built</span>
+      </div>
+      <div class="qs-item">
+        <span class="qs-val ${a.doorman ? 'doorman-yes' : 'doorman-no'}">${a.doorman ? '✓' : '✗'}</span>
+        <span class="qs-key">Doorman</span>
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      ${mainAmenities.length > 0 ? `
+      <div class="amenity-row">
+        ${mainAmenities.map(x => amenityTag(x.label, true)).join('')}
+      </div>` : ''}
+
+      <div class="fees-row">
+        <div class="fee-item">
+          <span class="fee-label">Move-In Fee</span>
+          <span class="fee-val${!b.moveInFee ? ' missing' : ''}">${b.moveInFee || 'Unknown — add'}</span>
+        </div>
+        <div class="fee-item">
+          <span class="fee-label">Move-Out Fee</span>
+          <span class="fee-val${!b.moveOutFee ? ' missing' : ''}">${b.moveOutFee || 'Unknown — add'}</span>
+        </div>
+        ${b.elevatorDeposit ? `<div class="fee-item"><span class="fee-label">Elevator Deposit</span><span class="fee-val">${b.elevatorDeposit}</span></div>` : ''}
+        ${b.moveWindow ? `<div class="fee-item"><span class="fee-label">Move Window</span><span class="fee-val">${b.moveWindow}</span></div>` : ''}
+      </div>
+
+      <div class="info-section">
+        <div class="info-item">
+          <span class="info-key">Management Co.</span>
+          <span class="info-val${!b.mgmt ? ' missing' : ''}">${b.mgmt || 'Add management company'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-key">HOA / Assoc.</span>
+          <span class="info-val${!b.hoaName ? ' missing' : ''}">${b.hoaName || 'Add HOA name'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-key">Contact</span>
+          <span class="info-val${!b.contact ? ' missing' : ''}">${b.contact || '—'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-key">Phone</span>
+          <span class="info-val${!b.phone ? ' missing' : ''}">
+            ${b.phone ? `<a href="tel:${b.phone.replace(/\D/g,'')}">${b.phone}</a>` : '— add phone'}
+          </span>
+        </div>
+        ${b.email ? `<div class="info-item" style="grid-column:1/-1">
+          <span class="info-key">Email</span>
+          <span class="info-val"><a href="mailto:${b.email}">${b.email}</a></span>
+        </div>` : ''}
+      </div>
+
+      ${b.notes ? `<div class="building-notes">${b.notes}</div>` : ''}
+
+      ${ (b.verifiedBy || b.verifiedDate) ? '<div class="verified-stamp"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Last verified' + (b.verifiedBy ? ' by ' + b.verifiedBy : '') + (b.verifiedDate ? ' — ' + b.verifiedDate : '') + '</span></div>' : '' }
+
+    </div>
+
+    <div class="card-footer">
+      <span class="neigh-tag">${b.neighborhood || 'Center City'}</span>
+      <button class="edit-note-btn" onclick="openEditModal(${b.id})">Edit</button>
+    </div>
+  </div>`;
+}
+
+// ===== FILTERS =====
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    if (activeFilters.has(f)) {
+      activeFilters.delete(f);
+      btn.classList.remove('active');
+    } else {
+      activeFilters.add(f);
+      btn.classList.add('active');
+    }
+    render();
+  });
+});
+
+// ===== MODAL =====
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Add New Building';
+  clearForm();
+  document.getElementById('addModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  editingId = id;
+  const b = buildings.find(x => x.id === id);
+  if (!b) return;
+
+  document.getElementById('modalTitle').textContent = `Edit: ${b.name}`;
+  document.getElementById('f_name').value = b.name || '';
+  document.getElementById('f_neighborhood').value = b.neighborhood || '';
+  document.getElementById('f_address').value = b.address || '';
+  document.getElementById('f_units').value = b.units || '';
+  document.getElementById('f_floors').value = b.floors || '';
+  document.getElementById('f_year').value = b.yearBuilt || '';
+  document.getElementById('f_type').value = b.type || '';
+  document.getElementById('f_mgmt').value = b.mgmt || '';
+  document.getElementById('f_hoa_name').value = b.hoaName || '';
+  document.getElementById('f_contact').value = b.contact || '';
+  document.getElementById('f_phone').value = b.phone || '';
+  document.getElementById('f_email').value = b.email || '';
+  document.getElementById('f_movein').value = b.moveInFee || '';
+  document.getElementById('f_moveout').value = b.moveOutFee || '';
+  document.getElementById('f_window').value = b.moveWindow || '';
+  document.getElementById('f_elevator').value = b.elevatorDeposit || '';
+  document.getElementById('f_notes').value = b.notes || '';
+  document.getElementById('f_verified_by').value = b.verifiedBy || '';
+  document.getElementById('f_verified_date').value = b.verifiedDate || '';
+
+  const amenityMap = {
+    doorman: 'a_doorman', concierge: 'a_concierge', gym: 'a_gym',
+    pool: 'a_pool', pool_indoor: 'a_pool_indoor', parking: 'a_parking',
+    valet: 'a_valet', rooftop: 'a_rooftop', pets: 'a_pets',
+    package: 'a_package', laundry: 'a_laundry', storage: 'a_storage',
+    bike: 'a_bike', shuttle: 'a_shuttle', balcony: 'a_balcony'
+  };
+  Object.entries(amenityMap).forEach(([key, elId]) => {
+    document.getElementById(elId).checked = !!(b.amenities && b.amenities[key]);
+  });
+
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('addModal').classList.remove('open');
+  editingId = null;
+}
+
+function clearForm() {
+  ['f_name','f_neighborhood','f_address','f_units','f_floors','f_year','f_type',
+   'f_mgmt','f_hoa_name','f_contact','f_phone','f_email',
+   'f_movein','f_moveout','f_window','f_elevator','f_notes',
+   'f_verified_by','f_verified_date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['a_doorman','a_concierge','a_gym','a_pool','a_pool_indoor','a_parking',
+   'a_valet','a_rooftop','a_pets','a_package','a_laundry','a_storage',
+   'a_bike','a_shuttle','a_balcony'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = false;
+  });
+}
+
+function saveBuilding() {
+  const name = document.getElementById('f_name').value.trim();
+  const address = document.getElementById('f_address').value.trim();
+  if (!name || !address) {
+    alert('Building name and address are required.');
+    return;
+  }
+
+  const data = {
+    name,
+    address,
+    neighborhood: document.getElementById('f_neighborhood').value,
+    units: parseInt(document.getElementById('f_units').value) || null,
+    floors: parseInt(document.getElementById('f_floors').value) || null,
+    yearBuilt: parseInt(document.getElementById('f_year').value) || null,
+    type: document.getElementById('f_type').value,
+    mgmt: document.getElementById('f_mgmt').value.trim(),
+    hoaName: document.getElementById('f_hoa_name').value.trim(),
+    contact: document.getElementById('f_contact').value.trim(),
+    phone: document.getElementById('f_phone').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    moveInFee: document.getElementById('f_movein').value.trim(),
+    moveOutFee: document.getElementById('f_moveout').value.trim(),
+    moveWindow: document.getElementById('f_window').value.trim(),
+    elevatorDeposit: document.getElementById('f_elevator').value.trim(),
+    notes: document.getElementById('f_notes').value.trim(),
+    verifiedBy: document.getElementById('f_verified_by').value.trim(),
+    verifiedDate: document.getElementById('f_verified_date').value.trim(),
+    amenities: {
+      doorman: document.getElementById('a_doorman').checked,
+      concierge: document.getElementById('a_concierge').checked,
+      gym: document.getElementById('a_gym').checked,
+      pool: document.getElementById('a_pool').checked,
+      pool_indoor: document.getElementById('a_pool_indoor').checked,
+      parking: document.getElementById('a_parking').checked,
+      valet: document.getElementById('a_valet').checked,
+      rooftop: document.getElementById('a_rooftop').checked,
+      pets: document.getElementById('a_pets').checked,
+      package: document.getElementById('a_package').checked,
+      laundry: document.getElementById('a_laundry').checked,
+      storage: document.getElementById('a_storage').checked,
+      bike: document.getElementById('a_bike').checked,
+      shuttle: document.getElementById('a_shuttle').checked,
+      balcony: document.getElementById('a_balcony').checked
+    }
+  };
+
+  if (editingId !== null) {
+    const idx = buildings.findIndex(b => b.id === editingId);
+    if (idx > -1) {
+      buildings[idx] = { ...buildings[idx], ...data };
+    }
+  } else {
+    data.id = Date.now();
+    buildings.push(data);
+  }
+
+  save();
+  updateStats();
+  render();
+  closeModal();
+}
+
+// Close on overlay click
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ===== GO =====
+init();
+</script>
+</body>
+</html>
