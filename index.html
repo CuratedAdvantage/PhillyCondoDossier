@@ -945,7 +945,12 @@
         </div>
         <div class="form-group">
           <label>Date Verified (MM/DD/YYYY)</label>
-          <input type="text" id="f_verified_date" placeholder="e.g. 02/26/2026">
+          <input type="text" id="f_verified_date" placeholder="e.g. 02/27/2026">
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label style="color:var(--muted);font-size:0.78rem;">Saves to sheet as: <em>Initials — MM/DD/YYYY</em> in the Last Verified column</label>
         </div>
       </div>
     </div>
@@ -1589,7 +1594,8 @@ function buildCard(b) {
   ].filter(x => a[x.key]);
 
   const badgeClass = b.type || 'highrise';
-  const badgeLabel = b.type === 'luxury' ? 'Luxury' : b.type === 'boutique' ? 'Boutique' : 'High-Rise';
+  const typeNorm = (b.type || '').toLowerCase().replace(/[-\s]/g, '');
+  const badgeLabel = typeNorm === 'luxury' ? 'Luxury' : typeNorm === 'boutique' ? 'Boutique' : 'High-Rise';
 
   const mapUrl = `https://maps.google.com/?q=${encodeURIComponent(b.address)}`;
 
@@ -1717,7 +1723,10 @@ function openEditModal(id) {
   document.getElementById('f_units').value = b.units || '';
   document.getElementById('f_floors').value = b.floors || '';
   document.getElementById('f_year').value = b.yearBuilt || '';
-  document.getElementById('f_type').value = b.type || '';
+  // Normalize type from sheet to match dropdown values
+  const typeNormEdit = (b.type || '').toLowerCase().replace(/[-\s]/g, '');
+  const typeVal = typeNormEdit === 'luxury' ? 'luxury' : typeNormEdit === 'boutique' ? 'boutique' : 'highrise';
+  document.getElementById('f_type').value = typeVal;
   document.getElementById('f_mgmt').value = b.mgmt || '';
   document.getElementById('f_hoa_name').value = b.hoaName || '';
   document.getElementById('f_contact').value = b.contact || '';
