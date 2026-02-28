@@ -1438,16 +1438,21 @@ function init() {
 // ── Google Sheets mode ───────────────────────────────────────
 function loadFromSheets() {
   showLoadingState(true);
-  fetch(APPS_SCRIPT_URL)
+  const url = APPS_SCRIPT_URL + '?action=get&t=' + Date.now();
+  fetch(url)
     .then(r => r.json())
     .then(data => {
-      if (data.status === 'ok') {
+      if (data.status === 'ok' && data.buildings && data.buildings.length > 0) {
         buildings = data.buildings;
         updateStats();
         render();
+      } else if (data.status === 'ok' && (!data.buildings || data.buildings.length === 0)) {
+        // Sheet exists but is empty — load seed data and push it up
+        showBanner('Sheet is empty — loading default buildings…', 'warn');
+        loadFromLocal();
       } else {
         console.error('Sheets error:', data.message);
-        showBanner('Could not load from Google Sheets. Showing local data.', 'warn');
+        showBanner('Could not load from Google Sheets: ' + (data.message || 'unknown error'), 'warn');
         loadFromLocal();
       }
     })
@@ -1461,16 +1466,16 @@ function loadFromSheets() {
 
 function saveToSheets(building, isNew) {
   const action = isNew ? 'add' : 'update';
-  return fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action, building })
-  })
-  .then(r => r.json())
-  .then(data => {
-    if (data.status !== 'ok') throw new Error(data.message);
-    return data;
-  });
+  const url = APPS_SCRIPT_URL
+    + '?action=' + action
+    + '&building=' + encodeURIComponent(JSON.stringify(building))
+    + '&t=' + Date.now();
+  return fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (data.status !== 'ok') throw new Error(data.message);
+      return data;
+    });
 }
 
 // ── Local fallback mode ──────────────────────────────────────
