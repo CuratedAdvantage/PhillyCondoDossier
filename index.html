@@ -1411,39 +1411,114 @@ const SEED_BUILDINGS = [
   }
 ];
 
+// ===== CONFIG =====
+// Paste your Apps Script Web App URL below after deploying
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXNXPUMJrBIF_SP5rmgxx9CbYQUGocR3ZY5V4L61TlUe7Wg2R6S3ZImaSc7BZV16tCnA/exec';
+
 // ===== STATE =====
 let buildings = [];
 let activeFilters = new Set();
 let editingId = null;
+let usingSheets = false; // flips to true once Apps Script URL is set
 
 // ===== INIT =====
-const DATA_VERSION = '2.0'; // bump this to force a reload of seed data
-
 function init() {
+  document.getElementById('searchInput').addEventListener('input', render);
+  document.getElementById('hoodFilter').addEventListener('change', render);
+
+  if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
+    usingSheets = true;
+    loadFromSheets();
+  } else {
+    // Fallback: localStorage (single-user mode)
+    loadFromLocal();
+  }
+}
+
+// ── Google Sheets mode ───────────────────────────────────────
+function loadFromSheets() {
+  showLoadingState(true);
+  fetch(APPS_SCRIPT_URL)
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        buildings = data.buildings;
+        updateStats();
+        render();
+      } else {
+        console.error('Sheets error:', data.message);
+        showBanner('Could not load from Google Sheets. Showing local data.', 'warn');
+        loadFromLocal();
+      }
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      showBanner('Could not reach Google Sheets. Showing local data.', 'warn');
+      loadFromLocal();
+    })
+    .finally(() => showLoadingState(false));
+}
+
+function saveToSheets(building, isNew) {
+  const action = isNew ? 'add' : 'update';
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action, building })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.status !== 'ok') throw new Error(data.message);
+    return data;
+  });
+}
+
+// ── Local fallback mode ──────────────────────────────────────
+function loadFromLocal() {
   const stored = localStorage.getItem('phillyBuildingIntel');
   const storedVersion = localStorage.getItem('phillyBuildingIntel_version');
   const storedData = stored ? JSON.parse(stored) : null;
+  const DATA_VERSION = '2.0';
 
-  // If no data, version mismatch, or stored has fewer buildings than seed — reload from seed
   if (!storedData || storedVersion !== DATA_VERSION || storedData.length < SEED_BUILDINGS.length) {
-    // Merge: keep any user-added buildings (id > SEED count) and user edits to existing ones
     const userAdded = storedData ? storedData.filter(b => b.id > SEED_BUILDINGS.length) : [];
     buildings = JSON.parse(JSON.stringify(SEED_BUILDINGS)).concat(userAdded);
-    save();
+    saveLocal();
   } else {
     buildings = storedData;
   }
-
   updateStats();
   render();
-
-  document.getElementById('searchInput').addEventListener('input', render);
-  document.getElementById('hoodFilter').addEventListener('change', render);
 }
 
-function save() {
+function saveLocal() {
   localStorage.setItem('phillyBuildingIntel', JSON.stringify(buildings));
-  localStorage.setItem('phillyBuildingIntel_version', DATA_VERSION);
+  localStorage.setItem('phillyBuildingIntel_version', '2.0');
+}
+
+// ── Generic save (routes to Sheets or local) ────────────────
+function save() {
+  if (!usingSheets) saveLocal();
+  // Sheets save happens in saveBuilding() directly
+}
+
+// ── UI helpers ───────────────────────────────────────────────
+function showLoadingState(on) {
+  const grid = document.getElementById('buildingGrid');
+  if (on) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);font-style:italic;font-family:'Playfair Display',serif;font-size:1.1rem;">Loading buildings from Google Sheets…</div>';
+  }
+}
+
+function showBanner(msg, type) {
+  const existing = document.getElementById('syncBanner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.id = 'syncBanner';
+  banner.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${type === 'warn' ? '#7a5c00' : '#2e6b2e'};color:#fff;padding:10px 20px;border-radius:8px;font-size:0.82rem;font-family:Arial,sans-serif;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);`;
+  banner.textContent = msg;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 4000);
 }
 
 // ===== STATS =====
@@ -1733,9 +1808,12 @@ function saveBuilding() {
     }
   };
 
-  if (editingId !== null) {
+  const isNew = editingId === null;
+
+  if (!isNew) {
     const idx = buildings.findIndex(b => b.id === editingId);
     if (idx > -1) {
+      data.id = editingId;
       buildings[idx] = { ...buildings[idx], ...data };
     }
   } else {
@@ -1743,10 +1821,29 @@ function saveBuilding() {
     buildings.push(data);
   }
 
-  save();
+  // Update UI immediately (optimistic)
   updateStats();
   render();
   closeModal();
+
+  if (usingSheets) {
+    // Save to Google Sheets
+    const btn = document.querySelector('.btn-save');
+    if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+    saveToSheets(data, isNew)
+      .then(() => showBanner('Saved to Google Sheets ✓', 'success'))
+      .catch(err => {
+        showBanner('Sheets save failed — saved locally as backup', 'warn');
+        saveLocal();
+        console.error(err);
+      })
+      .finally(() => {
+        if (btn) { btn.textContent = 'Save Building'; btn.disabled = false; }
+      });
+  } else {
+    saveLocal();
+  }
 }
 
 // Close on overlay click
